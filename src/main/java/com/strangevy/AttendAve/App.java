@@ -49,6 +49,9 @@ public class App
 		Sheet sheet = wb.createSheet();
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		int i = 0;
+		long aveUp = 0;
+		long aveDown = 0;
+		int countDay = 0;
         for(String[] row:rows){
         	//创建Excel工作表的行     
 		    Row r = sheet.createRow(i);
@@ -86,12 +89,17 @@ public class App
         			}
     		    }
         		if(days!=0){
+        			countDay += days;
+        			aveUp += tempUp;
+        			aveDown += tempDown;
         			r.createCell(3).setCellValue(sdf.format(new Date(tempUp/days)));
             		r.createCell(4).setCellValue(sdf.format(new Date(tempDown/days)));
         		}
         	}
         	i++;
         }
+        sheet.getRow(0).getCell(0).setCellValue("整月平均上班时间："+sdf.format(new Date(aveUp/countDay)));
+        sheet.getRow(1).getCell(0).setCellValue("整月平均下班时间："+sdf.format(new Date(aveDown/countDay)));
 	    wb.write(fileOut);
 	    fileOut.close();
 	    long endDate = System.currentTimeMillis();
